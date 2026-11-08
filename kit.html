@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Seu material | Independência Médica</title>
+<style>
+@font-face{font-family:"Bricolage Grotesque";font-weight:600;font-display:swap;src:url(assets/fonts/bricolage-grotesque-latin-600-normal.woff2) format("woff2")}
+@font-face{font-family:"IBM Plex Mono";font-weight:400;font-display:swap;src:url(assets/fonts/ibm-plex-mono-latin-400-normal.woff2) format("woff2")}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:#101A2B;color:#F0EADB;font:500 17px/1.5 "Bricolage Grotesque",Helvetica,Arial,sans-serif}
+main{max-width:480px;padding:48px 24px;text-align:center}
+.marca{font:400 11px "IBM Plex Mono",monospace;letter-spacing:3px;color:#C6A76B}
+h1{font-size:26px;line-height:1.15;margin:20px 0 12px}
+p{margin:0 0 24px}
+a.btn,button{display:inline-block;background:#C6A76B;color:#101A2B;border:0;padding:15px 24px;font:700 16px "Bricolage Grotesque",Helvetica,Arial,sans-serif;text-decoration:none;cursor:pointer}
+button[disabled]{opacity:.6;cursor:default}
+</style>
+</head>
+<body>
+<main>
+<div class="marca">INDEPENDÊNCIA MÉDICA</div>
+<h1 id="t">Verificando seu acesso</h1>
+<p id="m">Só um instante.</p>
+<a id="a" class="btn" hidden>Abrir o kit</a>
+<noscript><p>Ative o JavaScript para acessar o material.</p></noscript>
+</main>
+<script>
+(function () {
+  "use strict";
+  var ENDPOINT = "https://script.google.com/macros/s/AKfycbzNNqcjQ7DDuKGDg0WD8gvQjWMZ0drRzK923jQS1NwgQFLUfcFY3Znr9cdEIoZSlPG8xg/exec";
+  var token = (new URLSearchParams(location.search).get("t") || "").replace(/[^a-f0-9]/g, "");
+  function chamar(acao) {
+    return fetch(ENDPOINT, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify({ action: acao, t: token }) })
+      .then(function (r) { return r.json(); });
+  }
+  var h1 = document.getElementById("t"), msg = document.getElementById("m"), alvo = document.getElementById("a");
+  function texto(titulo, mensagem) { h1.textContent = titulo; msg.textContent = mensagem; }
+  if (!token) { texto("Link inválido", "Faça o cadastro novamente na página da Independência Médica."); return; }
+  chamar("kit").then(function (r) {
+    if (!r.ok) { texto("Link inválido", "Não encontramos este acesso. Faça o cadastro novamente na página da Independência Médica."); return; }
+    if (!r.liberado) { texto("Material em validação final", "Seu cadastro está confirmado. O kit está passando pela revisão final e você receberá o acesso por e-mail assim que for liberado."); return; }
+    texto("Seu material está pronto", "Toque no botão para abrir o kit.");
+    alvo.href = r.url; alvo.hidden = false;
+  }).catch(function () { texto("Não foi possível verificar agora", "Tente abrir o link novamente em alguns instantes."); });
+})();
+</script>
+</body>
+</html>

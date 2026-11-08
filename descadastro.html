@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Descadastro | Independência Médica</title>
+<style>
+@font-face{font-family:"Bricolage Grotesque";font-weight:600;font-display:swap;src:url(assets/fonts/bricolage-grotesque-latin-600-normal.woff2) format("woff2")}
+@font-face{font-family:"IBM Plex Mono";font-weight:400;font-display:swap;src:url(assets/fonts/ibm-plex-mono-latin-400-normal.woff2) format("woff2")}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:#F0EADB;color:#101A2B;font:500 17px/1.5 "Bricolage Grotesque",Helvetica,Arial,sans-serif}
+main{max-width:480px;padding:48px 24px;text-align:center}
+.marca{font:400 11px "IBM Plex Mono",monospace;letter-spacing:3px;color:#7A5C26}
+h1{font-size:26px;line-height:1.15;margin:20px 0 12px}
+p{margin:0 0 24px}
+a.btn,button{display:inline-block;background:#101A2B;color:#F0EADB;border:0;padding:15px 24px;font:700 16px "Bricolage Grotesque",Helvetica,Arial,sans-serif;text-decoration:none;cursor:pointer}
+button[disabled]{opacity:.6;cursor:default}
+</style>
+</head>
+<body>
+<main>
+<div class="marca">INDEPENDÊNCIA MÉDICA</div>
+<h1 id="t">Deixar de receber conteúdos?</h1>
+<p id="m">Você continuará com acesso ao material que solicitou.</p>
+<button id="a" type="button">Confirmar descadastro</button>
+<noscript><p>Ative o JavaScript para concluir.</p></noscript>
+</main>
+<script>
+(function () {
+  "use strict";
+  var ENDPOINT = "https://script.google.com/macros/s/AKfycbzNNqcjQ7DDuKGDg0WD8gvQjWMZ0drRzK923jQS1NwgQFLUfcFY3Znr9cdEIoZSlPG8xg/exec";
+  var token = (new URLSearchParams(location.search).get("t") || "").replace(/[^a-f0-9]/g, "");
+  function chamar(acao) {
+    return fetch(ENDPOINT, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify({ action: acao, t: token }) })
+      .then(function (r) { return r.json(); });
+  }
+  var h1 = document.getElementById("t"), msg = document.getElementById("m"), alvo = document.getElementById("a");
+  function texto(titulo, mensagem) { h1.textContent = titulo; msg.textContent = mensagem; }
+  if (!token) { texto("Link inválido", "Não encontramos este cadastro."); alvo.hidden = true; return; }
+  alvo.onclick = function () {
+    alvo.disabled = true;
+    chamar("descadastro").then(function (r) {
+      if (r.ok) { texto("Pronto", "Você não receberá mais conteúdos promocionais."); alvo.hidden = true; }
+      else { texto("Não foi possível concluir", "Tente novamente."); alvo.disabled = false; }
+    }).catch(function () { texto("Não foi possível concluir", "Tente novamente."); alvo.disabled = false; });
+  };
+})();
+</script>
+</body>
+</html>
