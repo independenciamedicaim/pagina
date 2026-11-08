@@ -1,0 +1,664 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex"><!-- TEMPORARIO: remover ao publicar a versao definitiva -->
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Independência Médica | IA, ferramentas e processos para o consultório</title>
+<meta name="description" content="Menos trabalho operacional. Mais tempo para exercer a medicina. Inteligência artificial, ferramentas e processos para simplificar a rotina do seu consultório.">
+<meta name="theme-color" content="#101A2B">
+<meta property="og:title" content="Independência Médica">
+<meta property="og:description" content="Menos trabalho operacional. Mais tempo para exercer a medicina.">
+<meta property="og:type" content="website">
+<link rel="preload" href="assets/fonts/bricolage-grotesque-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23101A2B'/%3E%3Ctext x='32' y='38' font-family='Arial' font-weight='900' font-size='26' fill='%23F0EADB' text-anchor='middle'%3EIM%3C/text%3E%3Crect x='24' y='45' width='16' height='3' fill='%23C6A76B'/%3E%3C/svg%3E">
+<style>
+@font-face{font-family:"Bricolage Grotesque";font-weight:500;font-display:swap;src:url(assets/fonts/bricolage-grotesque-latin-500-normal.woff2) format("woff2")}
+@font-face{font-family:"Bricolage Grotesque";font-weight:600;font-display:swap;src:url(assets/fonts/bricolage-grotesque-latin-600-normal.woff2) format("woff2")}
+@font-face{font-family:"Bricolage Grotesque";font-weight:700;font-display:swap;src:url(assets/fonts/bricolage-grotesque-latin-700-normal.woff2) format("woff2")}
+@font-face{font-family:"IBM Plex Mono";font-weight:400;font-display:swap;src:url(assets/fonts/ibm-plex-mono-latin-400-normal.woff2) format("woff2")}
+@font-face{font-family:"IBM Plex Mono";font-weight:500;font-display:swap;src:url(assets/fonts/ibm-plex-mono-latin-500-normal.woff2) format("woff2")}
+
+:root{
+  --navy:#101A2B; --creme:#F0EADB; --ouro:#C6A76B; --ouro-escuro:#7A5C26;
+  --sec-navy:#CFC6B4; --sec-creme:#5A5446; --cinza:#808283;
+  --m:24px; --max:1080px;
+  --sans:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--creme);color:var(--navy);font-family:var(--sans);font-weight:500;font-size:17px;line-height:1.5;letter-spacing:-.005em;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+img,svg{display:block}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 var(--m)}
+.mono{font-family:var(--mono);font-weight:500;font-size:11.5px;letter-spacing:.22em;text-transform:uppercase}
+.barra{width:56px;height:5px;background:var(--ouro-escuro);margin:0 0 22px}
+.navy .barra,.form-bloco .barra{background:var(--ouro)}
+h1,h2,h3{font-weight:700;letter-spacing:-.025em;line-height:1.06;margin:0}
+h1{font-size:clamp(38px,10.5vw,76px)}
+h2{font-size:clamp(30px,7.6vw,52px)}
+h3{font-size:21px;line-height:1.2;letter-spacing:-.015em}
+p{margin:0}
+.sec{padding:76px 0}
+.navy{background:var(--navy);color:var(--creme)}
+.rotulo{color:var(--ouro-escuro);margin-bottom:18px;display:block}
+.navy .rotulo,.form-bloco .rotulo{color:var(--ouro)}
+.lead{font-size:19px;color:var(--sec-creme);margin-top:18px;max-width:34em}
+.navy .lead,.form-bloco .lead{color:var(--sec-navy)}
+.destaque{color:var(--ouro-escuro)}
+.navy .destaque{color:var(--ouro)}
+.linha{height:1px;background:var(--ouro-escuro);opacity:.55;border:0;margin:0}
+.navy .linha{background:var(--ouro);opacity:.5}
+
+/* Botões */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:56px;padding:0 26px;font-family:var(--sans);font-weight:700;font-size:17px;text-decoration:none;border:0;cursor:pointer;letter-spacing:-.005em;transition:transform .15s ease,background .15s ease}
+.btn:active{transform:translateY(1px)}
+.btn-ouro{background:var(--ouro);color:var(--navy)}
+.btn-ouro:hover{background:#d3b67f}
+.btn-navy{background:var(--navy);color:var(--creme)}
+.btn:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(--ouro);outline-offset:3px}
+
+/* Topo */
+.topo{background:var(--navy);color:var(--creme)}
+.topo .wrap{display:flex;align-items:center;justify-content:space-between;height:68px}
+.marca{display:flex;align-items:center;gap:12px;text-decoration:none}
+.mono-im{width:36px;height:36px;background:var(--navy);border:1px solid rgba(198,167,107,.45);display:grid;place-items:center;position:relative;font-weight:700;font-size:14px;letter-spacing:-.02em}
+.mono-im::after{content:"";position:absolute;bottom:7px;width:12px;height:2px;background:var(--ouro)}
+.mono-im span{transform:translateY(-2px)}
+.marca .mono{color:var(--ouro);font-size:10.5px}
+.topo nav a{color:var(--sec-navy);text-decoration:none;font-size:10.5px;letter-spacing:.14em;white-space:nowrap}
+@media (max-width:420px){.marca .mono{font-size:9.5px;letter-spacing:.16em}.marca{gap:10px}.mono-im{width:32px;height:32px;font-size:13px}}
+.topo nav a:hover{color:var(--creme)}
+
+/* Hero */
+.hero{padding:44px 0 72px}
+.hero .lead{font-size:clamp(18px,4.6vw,22px)}
+.hero-cta{margin-top:36px;display:flex;flex-direction:column;gap:14px;align-items:flex-start}
+.hero-cta .mono{color:var(--sec-navy);font-size:10.5px}
+.hero-pilares{margin-top:56px;display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid rgba(198,167,107,.35)}
+.hero-pilares div{padding:18px 10px 0 0;display:flex;flex-direction:column;gap:10px}
+.hero-pilares svg{width:26px;height:26px;stroke:var(--ouro);fill:none;stroke-width:1.4}
+.hero-pilares span{font-size:13.5px;line-height:1.3;color:var(--sec-navy)}
+
+/* Raio-X */
+.rx-topo p.pergunta{font-size:clamp(21px,5.4vw,28px);font-weight:600;line-height:1.25;letter-spacing:-.015em;margin-top:22px;max-width:24em}
+.planilha{margin-top:44px;background:#fff;border:1px solid rgba(122,92,38,.45);font-family:var(--sans);overflow:hidden}
+.pl-barra{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 14px;background:var(--navy);color:var(--creme)}
+.pl-barra .mono{font-size:10px;color:var(--ouro)}
+.pl-barra .ficticio{color:var(--creme);border:1px solid rgba(198,167,107,.6);padding:3px 7px;font-size:9.5px;white-space:nowrap}
+.pl-abas{display:flex;gap:0;overflow-x:auto;border-bottom:1px solid #e3dccb;background:#f7f3ea;scrollbar-width:none}
+.pl-abas::-webkit-scrollbar{display:none}
+.pl-abas span{font-family:var(--mono);font-size:10px;letter-spacing:.06em;padding:9px 12px;white-space:nowrap;color:var(--sec-creme);border-right:1px solid #e3dccb}
+.pl-abas span.ativa{background:#fff;color:var(--navy);font-weight:500;box-shadow:inset 0 2px 0 var(--ouro-escuro)}
+.pl-corpo{padding:18px 16px 20px}
+.pl-periodo{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;color:var(--sec-creme);padding-bottom:14px;border-bottom:1px solid #ece6d8}
+.kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:0;border-bottom:1px solid #ece6d8}
+.kpi{padding:16px 0 16px;border-right:1px solid #ece6d8}
+.kpi:nth-child(2n){border-right:0;padding-left:16px}
+.kpi:nth-child(n+3){border-top:1px solid #ece6d8}
+.kpi .mono{font-size:9.5px;letter-spacing:.12em;color:var(--sec-creme);display:block}
+.kpi strong{display:block;font-size:34px;line-height:1.05;letter-spacing:-.03em;margin-top:6px}
+.kpi strong.ouro{color:var(--ouro-escuro)}
+.kpi small{font-size:12.5px;color:var(--sec-creme)}
+.funil{padding:18px 0 4px}
+.funil h4,.motivos h4{margin:0 0 12px;font-family:var(--mono);font-weight:500;font-size:9.5px;letter-spacing:.14em;color:var(--sec-creme)}
+.fbar{display:grid;grid-template-columns:96px 1fr 34px;align-items:center;gap:10px;margin:8px 0;font-size:13.5px}
+.fbar i{display:block;height:14px;background:#ddd5c3}
+.fbar i b{display:block;height:100%;background:var(--navy)}
+.fbar i b.ouro{background:var(--ouro-escuro)}
+.fbar em{font-style:normal;font-family:var(--mono);font-size:12px;text-align:right}
+.motivos{padding-top:16px;margin-top:12px;border-top:1px solid #ece6d8}
+.motivos table{width:100%;border-collapse:collapse;font-size:13.5px}
+.motivos td{padding:7px 0;border-bottom:1px dashed #e3dccb}
+.motivos td:last-child{text-align:right;font-family:var(--mono);font-size:12px}
+.pl-nota{margin-top:12px;font-size:13px;color:var(--sec-creme)}
+
+.passos{margin-top:64px}
+.passos ol{list-style:none;margin:28px 0 0;padding:0;counter-reset:p}
+.passos li{display:grid;grid-template-columns:62px 1fr;gap:6px;padding:22px 0;border-top:1px solid rgba(122,92,38,.4)}
+.passos li:last-child{border-bottom:1px solid rgba(122,92,38,.4)}
+.passos .num{font-weight:700;font-size:34px;line-height:1;letter-spacing:-.03em;color:var(--ouro-escuro)}
+.passos p{color:var(--sec-creme);margin-top:6px;font-size:16px}
+
+.incluso{margin-top:64px}
+.incluso ul{list-style:none;padding:0;margin:26px 0 0;display:grid;gap:12px}
+.incluso li{display:flex;gap:16px;align-items:flex-start;padding:18px;border:1px solid rgba(122,92,38,.45)}
+.incluso svg{flex:0 0 30px;width:30px;height:30px;stroke:var(--ouro-escuro);fill:none;stroke-width:1.4}
+.incluso p{font-size:15px;color:var(--sec-creme);margin-top:4px}
+
+/* Formulário */
+.form-bloco{background:var(--navy);color:var(--creme);padding:40px 22px;margin-top:64px}
+.form-bloco h2{font-size:clamp(28px,7vw,40px)}
+.form-bloco .lead{font-size:16.5px;margin-top:12px}
+form{margin-top:28px;display:grid;gap:18px}
+.campo label{display:block;font-family:var(--mono);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--sec-navy);margin-bottom:8px}
+.campo input{width:100%;height:56px;padding:0 16px;font:600 17px var(--sans);color:var(--navy);background:var(--creme);border:2px solid var(--creme);border-radius:0;-webkit-appearance:none;appearance:none}
+.campo input:focus{border-color:var(--ouro);outline:none}
+.campo input[aria-invalid="true"]{border-color:#e0a28f}
+.erro{display:block;min-height:0;font-size:14px;color:#f1b9a6;margin-top:6px}
+.check{display:grid;grid-template-columns:26px 1fr;gap:12px;align-items:start;font-size:15px;line-height:1.45;color:var(--sec-navy);cursor:pointer}
+.check input{appearance:none;-webkit-appearance:none;width:24px;height:24px;margin:1px 0 0;border:1.5px solid var(--ouro);background:transparent;display:grid;place-items:center;cursor:pointer}
+.check input:checked{background:var(--ouro)}
+.check input:checked::after{content:"";width:6px;height:11px;border:solid var(--navy);border-width:0 2.5px 2.5px 0;transform:rotate(45deg) translate(-1px,-1px)}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+form .btn{width:100%;margin-top:4px}
+.btn[disabled]{opacity:.7;cursor:progress}
+.priv{font-size:13.5px;color:var(--sec-navy);line-height:1.5}
+.priv a{color:var(--creme)}
+.alerta{padding:14px 16px;border:1px solid #e0a28f;color:#f6d3c6;font-size:15px}
+.ok-estado{margin-top:26px}
+.ok-estado h3{font-size:28px;letter-spacing:-.025em}
+.ok-estado p{color:var(--sec-navy);margin-top:12px}
+.ok-estado .btn{margin-top:24px;width:100%}
+.ok-estado .mini{font-size:14px;margin-top:16px}
+[hidden]{display:none!important}
+
+/* Sobre */
+.sobre-grid{display:grid;gap:28px}
+.sobre p{font-size:18px;color:var(--sec-creme);margin-top:16px;max-width:34em}
+.sobre p.forte{color:var(--navy);font-weight:600}
+.sobre .assinatura{margin-top:26px;display:flex;align-items:center;gap:14px}
+.sobre .assinatura .mono-im{background:var(--navy);color:var(--creme);width:44px;height:44px;font-size:16px;border:0}
+.sobre .assinatura .mono-im::after{bottom:9px;width:14px}
+.sobre .assinatura div{font-size:15px;line-height:1.35}
+.sobre .assinatura small{display:block;color:var(--sec-creme);font-size:13.5px}
+.pendente{background:#f3dfb8;padding:0 4px}
+
+/* Aplicações */
+.apps ul{list-style:none;padding:0;margin:30px 0 0;display:grid;grid-template-columns:1fr}
+.apps li{display:grid;grid-template-columns:46px 1fr;align-items:baseline;padding:16px 0;border-top:1px solid rgba(198,167,107,.3);font-size:18px;font-weight:600;letter-spacing:-.01em}
+.apps li:last-child{border-bottom:1px solid rgba(198,167,107,.3)}
+.apps li .mono{color:var(--ouro);font-size:11px;letter-spacing:.12em}
+.apps .nota{margin-top:22px;color:var(--sec-navy);font-size:15px}
+
+/* Recursos */
+.recursos-lista{display:grid;gap:14px;margin-top:30px}
+.recurso{display:flex;flex-direction:column;gap:10px;padding:22px;border:1px solid rgba(122,92,38,.45);text-decoration:none;background:transparent;transition:background .15s}
+.recurso:hover{background:#ebe3d0}
+.recurso .mono{font-size:10px;color:var(--ouro-escuro)}
+.recurso p{font-size:15px;color:var(--sec-creme)}
+.recurso .ir{font-weight:700;font-size:15px;margin-top:6px}
+.recursos .nota{margin-top:18px;font-size:14.5px;color:var(--sec-creme)}
+
+/* Rodapé */
+footer{background:var(--navy);color:var(--sec-navy);padding:48px 0 calc(40px + env(safe-area-inset-bottom))}
+footer .topo-rod{display:flex;align-items:center;gap:12px;color:var(--creme)}
+footer .topo-rod .mono{color:var(--ouro);font-size:10.5px}
+footer ul{list-style:none;padding:0;margin:26px 0;display:grid;gap:12px;font-size:15px}
+footer a{color:var(--creme);text-decoration:none}
+footer a:hover{text-decoration:underline}
+footer .lema{font-size:15px;max-width:30em}
+footer .copy{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;margin-top:24px;color:var(--cinza)}
+
+@media (min-width:760px){
+  :root{--m:48px}
+  .sec{padding:112px 0}
+  .barra{width:88px;height:7px}
+  .hero{padding:72px 0 104px}
+  .hero-cta{flex-direction:row;align-items:center;gap:22px}
+  .hero-pilares{max-width:720px}
+  .hero-pilares span{font-size:15px}
+  .rx-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:64px;align-items:start}
+  .planilha{margin-top:0}
+  .rx-grid .rx-topo{position:sticky;top:32px}
+  .kpis{grid-template-columns:repeat(4,1fr)}
+  .kpi{padding-left:16px}
+  .kpi:first-child{padding-left:0}
+  .kpi:nth-child(2n){border-right:1px solid #ece6d8}
+  .kpi:last-child{border-right:0}
+  .kpi:nth-child(n+3){border-top:0}
+  .kpi strong{font-size:30px}
+  .passos-incluso{display:grid;grid-template-columns:1fr 1fr;gap:64px;margin-top:96px}
+  .passos,.incluso{margin-top:0}
+  .form-bloco{display:grid;grid-template-columns:1fr 1fr;gap:56px;padding:64px 56px;margin-top:96px}
+  .form-bloco form,.form-bloco .ok-estado{margin-top:0}
+  .sobre-grid{grid-template-columns:.8fr 1.2fr;gap:64px}
+  .apps ul{grid-template-columns:1fr 1fr;column-gap:48px}
+  .apps li:nth-last-child(2){border-bottom:1px solid rgba(198,167,107,.3)}
+  .recursos-lista{grid-template-columns:repeat(3,1fr)}
+  footer .grid{display:grid;grid-template-columns:1.2fr 1fr;gap:48px;align-items:start}
+  footer ul{margin:0}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.btn{transition:none}}
+</style>
+</head>
+<body>
+
+<header class="topo">
+  <div class="wrap">
+    <a class="marca" href="#inicio" aria-label="Independência Médica, início">
+      <span class="mono-im" aria-hidden="true"><span>IM</span></span>
+      <span class="mono">Independência Médica</span>
+    </a>
+    <nav><a class="mono" href="#raio-x" data-evento="clique_cta" data-local="topo">Raio-X</a></nav>
+  </div>
+</header>
+
+<main id="inicio">
+
+  <!-- HERO -->
+  <section class="navy hero">
+    <div class="wrap">
+      <div class="barra" aria-hidden="true"></div>
+      <h1>Menos trabalho operacional. <span class="destaque">Mais tempo para exercer a medicina.</span></h1>
+      <p class="lead">Inteligência artificial, ferramentas e processos para simplificar a rotina do seu consultório.</p>
+      <div class="hero-cta">
+        <a class="btn btn-ouro" href="#raio-x" data-evento="clique_cta" data-local="hero">Conhecer a ferramenta gratuita
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M8 2v12M3 9l5 5 5-5"/></svg>
+        </a>
+        <span class="mono">Raio-X da Conversão com IA</span>
+      </div>
+      <div class="hero-pilares" aria-label="Pilares">
+        <div>
+          <svg viewBox="0 0 26 26" aria-hidden="true"><rect x="3" y="5" width="20" height="16"/><path d="M3 10h20M8 15h6"/></svg>
+          <span>Ferramentas prontas para usar</span>
+        </div>
+        <div>
+          <svg viewBox="0 0 26 26" aria-hidden="true"><circle cx="13" cy="13" r="9"/><path d="M13 8v5l3 3"/></svg>
+          <span>Processos mais simples</span>
+        </div>
+        <div>
+          <svg viewBox="0 0 26 26" aria-hidden="true"><path d="M4 20l6-6 4 4 8-9"/><path d="M17 9h5v5"/></svg>
+          <span>IA aplicada à rotina</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RAIO-X -->
+  <section class="sec" id="raio-x" aria-labelledby="rx-titulo">
+    <div class="wrap">
+      <div class="rx-grid">
+        <div class="rx-topo">
+          <span class="mono rotulo">Ferramenta gratuita</span>
+          <div class="barra" aria-hidden="true"></div>
+          <h2 id="rx-titulo">Raio-X da Conversão <span class="destaque">com IA</span></h2>
+          <p class="pergunta">Você sabe quantas pessoas procuram seu consultório e quantas realmente agendam?</p>
+          <p class="lead">Descubra seus indicadores de conversão e identifique oportunidades de melhoria com uma planilha gratuita e prompts de inteligência artificial.</p>
+        </div>
+
+        <figure class="planilha" aria-label="Prévia da planilha com dados fictícios" style="margin-inline:0">
+          <div class="pl-barra">
+            <span class="mono">Raio-X da Conversão</span>
+            <span class="mono ficticio">Exemplo fictício</span>
+          </div>
+          <div class="pl-abas" aria-hidden="true">
+            <span>01 MEUS CONTATOS</span><span>01B CONFERIR</span><span>08 CONFIGURAÇÕES</span><span class="ativa">09 DIAGNÓSTICO RESUMIDO</span>
+          </div>
+          <div class="pl-corpo">
+            <div class="pl-periodo"><span>PERÍODO</span><span>14 DIAS</span></div>
+            <div class="kpis">
+              <div class="kpi"><span class="mono">Contatos novos</span><strong>80</strong><small>procuraram</small></div>
+              <div class="kpi"><span class="mono">Agendamentos</span><strong>20</strong><small>dos 80 contatos</small></div>
+              <div class="kpi"><span class="mono">Taxa de agend.</span><strong class="ouro">25%</strong><small>20 ÷ 80</small></div>
+              <div class="kpi"><span class="mono">Comparecimento</span><strong>80%</strong><small>16 de 20</small></div>
+            </div>
+            <div class="funil">
+              <h4>DO CONTATO À CONSULTA</h4>
+              <div class="fbar"><span>Contatos</span><i><b style="width:100%"></b></i><em>80</em></div>
+              <div class="fbar"><span>Agendaram</span><i><b class="ouro" style="width:25%"></b></i><em>20</em></div>
+              <div class="fbar"><span>Compareceram</span><i><b style="width:20%"></b></i><em>16</em></div>
+            </div>
+            <div class="motivos">
+              <h4>MOTIVOS DE NÃO AGENDAMENTO</h4>
+              <table>
+                <tr><td>Sem resposta após o 1º contato</td><td>22</td></tr>
+                <tr><td>Valor da consulta</td><td>18</td></tr>
+                <tr><td>Horário indisponível</td><td>12</td></tr>
+                <tr><td>Desconhecido</td><td>8</td></tr>
+              </table>
+            </div>
+          </div>
+        </figure>
+      </div>
+      <p class="pl-nota">Prévia ilustrativa com dados fictícios. Uma taxa de agendamento de 25% significa 25 agendamentos para cada 100 contatos, não 25 consultas realizadas.</p>
+
+      <div class="passos-incluso">
+        <div class="passos">
+          <span class="mono rotulo">Como funciona</span>
+          <h3>Três passos, no seu ritmo</h3>
+          <ol>
+            <li><span class="num">01</span><div><h3>Receba o kit</h3><p>Cadastre seu nome e e-mail e acesse o material na hora.</p></div></li>
+            <li><span class="num">02</span><div><h3>Organize seus dados com o guia e a IA</h3><p>O guia indica o caminho conforme a forma como você registra seus contatos hoje: papel, planilha ou CRM.</p></div></li>
+            <li><span class="num">03</span><div><h3>Visualize e interprete seus indicadores</h3><p>A planilha calcula as taxas e um prompt ajuda a entender onde investigar, sem dados de pacientes.</p></div></li>
+          </ol>
+        </div>
+
+        <div class="incluso">
+          <span class="mono rotulo">O que está incluído</span>
+          <h3>Tudo o que você precisa para começar</h3>
+          <ul>
+            <li>
+              <svg viewBox="0 0 30 30" aria-hidden="true"><rect x="4" y="5" width="22" height="20"/><path d="M4 11h22M4 17h22M12 5v20"/></svg>
+              <div><h3>Planilha oficial</h3><p>Calcula taxa de agendamento, comparecimento e motivos de perda.</p></div>
+            </li>
+            <li>
+              <svg viewBox="0 0 30 30" aria-hidden="true"><rect x="4" y="5" width="22" height="20"/><path d="M9 19l4-4 3 3 5-6"/></svg>
+              <div><h3>Exemplo preenchido</h3><p>Com dados fictícios, para você ver o resultado antes de usar os seus.</p></div>
+            </li>
+            <li>
+              <svg viewBox="0 0 30 30" aria-hidden="true"><rect x="5" y="4" width="8" height="6"/><rect x="17" y="13" width="8" height="6"/><rect x="5" y="21" width="8" height="6"/><path d="M9 10v11M13 16h4"/></svg>
+              <div><h3>Guia com fluxograma e dois prompts</h3><p>Um para organizar registros desidentificados e outro para interpretar os indicadores.</p></div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- FORMULÁRIO -->
+      <div class="form-bloco" id="cadastro">
+        <div>
+          <div class="barra" aria-hidden="true"></div>
+          <span class="mono rotulo">Gratuito</span>
+          <h2>Receba seu Raio-X</h2>
+          <p class="lead">Informe seu primeiro nome e o e-mail onde quer receber o acesso.</p>
+        </div>
+
+        <div>
+          <form id="form-cadastro" novalidate data-material="raio-x-conversao">
+            <div class="campo">
+              <label for="f-nome">Primeiro nome</label>
+              <input id="f-nome" name="nome" type="text" autocomplete="given-name" maxlength="60" required aria-describedby="e-nome">
+              <span class="erro" id="e-nome" aria-live="polite"></span>
+            </div>
+            <div class="campo">
+              <label for="f-email">E-mail</label>
+              <input id="f-email" name="email" type="email" inputmode="email" autocomplete="email" autocapitalize="off" spellcheck="false" maxlength="254" required aria-describedby="e-email">
+              <span class="erro" id="e-email" aria-live="polite"></span>
+            </div>
+            <div class="hp" aria-hidden="true">
+              <label for="f-site">Não preencha</label>
+              <input id="f-site" name="website" type="text" tabindex="-1" autocomplete="off">
+            </div>
+            <label class="check">
+              <input type="checkbox" name="marketing" id="f-mkt">
+              <span>Também quero receber novos tutoriais, ferramentas e conteúdos da Independência Médica por e-mail.</span>
+            </label>
+            <div class="alerta" id="f-alerta" role="alert" hidden></div>
+            <button class="btn btn-ouro" type="submit" id="f-botao">Receber meu Raio-X gratuito</button>
+            <p class="priv">Seus dados serão utilizados para disponibilizar o material solicitado. Consulte nossa <a href="politica-de-privacidade.html">Política de Privacidade</a>.</p>
+          </form>
+
+          <div class="ok-estado" id="f-ok" hidden tabindex="-1" aria-live="polite">
+            <span class="mono rotulo">Cadastro confirmado</span>
+            <h3 id="ok-titulo">Pronto. Seu kit está liberado.</h3>
+            <p id="ok-texto">Também enviamos o link para o seu e-mail.</p>
+            <a class="btn btn-ouro" id="ok-link" href="#" target="_blank" rel="noopener">Acessar o material</a>
+            <p class="mini" id="ok-mini">Não encontrou o e-mail? Confira a caixa de spam ou promoções.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SOBRE -->
+  <section class="sec sobre" id="sobre" style="padding-top:24px">
+    <div class="wrap">
+      <hr class="linha" style="margin-bottom:72px">
+      <div class="sobre-grid">
+        <div>
+          <span class="mono rotulo">Sobre</span>
+          <h2>Tecnologia testada na rotina de um consultório real</h2>
+        </div>
+        <div>
+          <p class="forte">A Independência Médica é uma marca em construção, criada por uma médica que aplica, testa e compartilha inteligência artificial, ferramentas digitais e processos para simplificar a rotina operacional dos consultórios.</p>
+          <p>Aqui você encontra o que já é possível simplificar com tecnologia e como começar: exemplos práticos, prompts testados e ferramentas que funcionam sem depender de suporte individual.</p>
+          <p>A IA ajuda a organizar e interpretar. A decisão clínica continua sendo sua.</p>
+          <div class="assinatura">
+            <span class="mono-im" aria-hidden="true"><span>IM</span></span>
+            <div>Dra. Caroline Lima<small>Médica e fundadora · <span class="pendente">CRM a preencher</span></small></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- APLICAÇÕES -->
+  <section class="sec navy apps" id="temas">
+    <div class="wrap">
+      <span class="mono rotulo">Outras aplicações</span>
+      <div class="barra" aria-hidden="true"></div>
+      <h2>Onde a tecnologia já pode <span class="destaque">simplificar</span> o consultório</h2>
+      <ul>
+        <li><span class="mono">01</span>IA aplicada ao consultório</li>
+        <li><span class="mono">02</span>Atendimento e WhatsApp</li>
+        <li><span class="mono">03</span>Captação e análise de resultados</li>
+        <li><span class="mono">04</span>Organização financeira e administrativa</li>
+        <li><span class="mono">05</span>Assistentes e automações</li>
+        <li><span class="mono">06</span>Produtividade e documentos</li>
+      </ul>
+      <p class="nota">Esses temas aparecem nos conteúdos do <a href="https://www.instagram.com/independenciamedica/" target="_blank" rel="noopener">@independenciamedica</a>.</p>
+    </div>
+  </section>
+
+  <!-- RECURSOS (gerado a partir da lista abaixo) -->
+  <section class="sec recursos" id="materiais">
+    <div class="wrap">
+      <span class="mono rotulo">Materiais</span>
+      <div class="barra" aria-hidden="true"></div>
+      <h2>Recursos disponíveis</h2>
+      <div class="recursos-lista" id="recursos-lista"></div>
+      <p class="nota">Novos materiais entram aqui quando estiverem prontos e testados.</p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="grid">
+      <div>
+        <div class="topo-rod"><span class="mono-im" aria-hidden="true"><span>IM</span></span><span class="mono">Independência Médica</span></div>
+        <p class="lema" style="margin-top:20px">Menos trabalho operacional. Mais tempo para exercer a medicina.</p>
+      </div>
+      <ul>
+        <li><a href="https://www.instagram.com/independenciamedica/" target="_blank" rel="noopener">Instagram @independenciamedica</a></li>
+        <li><a href="politica-de-privacidade.html">Política de Privacidade</a></li>
+        <li id="rod-contato" hidden></li>
+      </ul>
+    </div>
+    <p class="copy">© <span id="ano">2026</span> Independência Médica</p>
+  </div>
+</footer>
+
+<!--
+  RECURSOS: para adicionar um material, inclua um item nesta lista.
+  status "disponivel" aparece na página; qualquer outro valor fica oculto
+  (assim nada é anunciado antes de estar pronto).
+-->
+<script type="application/json" id="dados-recursos">
+[
+  {
+    "id": "raio-x-conversao",
+    "tipo": "Ferramenta gratuita",
+    "titulo": "Raio-X da Conversão com IA",
+    "descricao": "Planilha e prompts para medir quantos contatos viram agendamento.",
+    "link": "#raio-x",
+    "acao": "Receber o kit",
+    "status": "disponivel"
+  },
+  {
+    "id": "tutorial-manychat",
+    "tipo": "Tutorial gratuito",
+    "titulo": "Tutorial de Manychat",
+    "descricao": "Em preparação.",
+    "link": "",
+    "acao": "",
+    "status": "em_preparacao"
+  }
+]
+</script>
+
+<script>
+/* CONFIGURAÇÃO: preencher antes de publicar */
+var CONFIG = {
+  endpoint: "https://script.google.com/macros/s/AKfycbzNNqcjQ7DDuKGDg0WD8gvQjWMZ0drRzK923jQS1NwgQFLUfcFY3Znr9cdEIoZSlPG8xg/exec",        // URL do Apps Script implantado (termina em /exec)
+  contato: ""          // e-mail institucional para o rodapé (opcional)
+};
+
+(function () {
+  "use strict";
+  var ORIGEM = (function () {
+    try {
+      var q = new URLSearchParams(location.search);
+      var o = (q.get("origem") || q.get("utm_source") || "direto").toLowerCase().replace(/[^a-z0-9_\-]/g, "").slice(0, 40);
+      return o || "direto";
+    } catch (e) { return "direto"; }
+  })();
+
+  /* Eventos anônimos: sem cookies, sem identificadores, sem terceiros */
+  function evento(tipo) {
+    if (!CONFIG.endpoint) return;
+    var corpo = JSON.stringify({ action: "evento", tipo: tipo, origem: ORIGEM, material: "raio-x-conversao" });
+    try {
+      if (navigator.sendBeacon) navigator.sendBeacon(CONFIG.endpoint, new Blob([corpo], { type: "text/plain" }));
+      else fetch(CONFIG.endpoint, { method: "POST", body: corpo, keepalive: true, headers: { "Content-Type": "text/plain" } });
+    } catch (e) {}
+  }
+  evento("visita");
+  document.querySelectorAll("[data-evento='clique_cta']").forEach(function (a) {
+    a.addEventListener("click", function () { evento("clique_cta"); });
+  });
+
+  /* Recursos */
+  var lista = document.getElementById("recursos-lista");
+  try {
+    JSON.parse(document.getElementById("dados-recursos").textContent)
+      .filter(function (r) { return r.status === "disponivel"; })
+      .forEach(function (r) {
+        var a = document.createElement("a");
+        a.className = "recurso";
+        a.href = r.link;
+        var t = document.createElement("span"); t.className = "mono"; t.textContent = r.tipo;
+        var h = document.createElement("h3"); h.textContent = r.titulo;
+        var p = document.createElement("p"); p.textContent = r.descricao;
+        var i = document.createElement("span"); i.className = "ir"; i.textContent = r.acao + " →";
+        a.append(t, h, p, i);
+        lista.appendChild(a);
+      });
+  } catch (e) {}
+
+  /* Rodapé */
+  document.getElementById("ano").textContent = new Date().getFullYear();
+  if (CONFIG.contato) {
+    var li = document.getElementById("rod-contato");
+    var a = document.createElement("a");
+    a.href = "mailto:" + CONFIG.contato; a.textContent = CONFIG.contato;
+    li.appendChild(a); li.hidden = false;
+  }
+
+  /* Formulário */
+  var form = document.getElementById("form-cadastro");
+  var nome = document.getElementById("f-nome");
+  var email = document.getElementById("f-email");
+  var botao = document.getElementById("f-botao");
+  var alerta = document.getElementById("f-alerta");
+  var inicio = Date.now();
+  var iniciou = false;
+  var enviando = false;
+
+  form.addEventListener("focusin", function () {
+    if (!iniciou) { iniciou = true; evento("inicio_cadastro"); }
+  });
+
+  function erroCampo(campo, msg) {
+    var span = document.getElementById("e-" + campo.name);
+    span.textContent = msg || "";
+    campo.setAttribute("aria-invalid", msg ? "true" : "false");
+  }
+  function validar() {
+    var ok = true;
+    var n = nome.value.replace(/\s+/g, " ").trim();
+    var e = email.value.trim().toLowerCase();
+    if (!n) { erroCampo(nome, "Informe seu primeiro nome."); ok = false; } else erroCampo(nome, "");
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(e)) { erroCampo(email, "Informe um e-mail válido."); ok = false; } else erroCampo(email, "");
+    return ok;
+  }
+  [nome, email].forEach(function (c) {
+    c.addEventListener("blur", function () { if (c.value) validar(); });
+  });
+
+  function mostrarAlerta(msg) { alerta.textContent = msg; alerta.hidden = !msg; }
+
+  var MENSAGENS = {
+    validacao: "Confira os campos destacados.",
+    limite: "Muitas tentativas em pouco tempo. Aguarde alguns minutos e tente novamente.",
+    ocupado: "O sistema está ocupado. Tente novamente em instantes.",
+    erro_gravacao: "Não conseguimos registrar seu cadastro. Tente novamente em instantes.",
+    padrao: "Não foi possível concluir o cadastro. Verifique sua conexão e tente novamente."
+  };
+
+  form.addEventListener("submit", function (ev) {
+    ev.preventDefault();
+    if (enviando) return;
+    mostrarAlerta("");
+    if (!validar()) { (nome.getAttribute("aria-invalid") === "true" ? nome : email).focus(); return; }
+    if (!CONFIG.endpoint) { mostrarAlerta("O cadastro ainda não está ativo. Volte em breve."); return; }
+
+    enviando = true;
+    botao.disabled = true;
+    botao.textContent = "Enviando...";
+    var dados = {
+      action: "cadastro",
+      nome: nome.value,
+      email: email.value,
+      marketing: document.getElementById("f-mkt").checked,
+      website: document.getElementById("f-site").value,
+      material: form.getAttribute("data-material"),
+      origem: ORIGEM,
+      tempo: Date.now() - inicio
+    };
+    var ctrl = window.AbortController ? new AbortController() : null;
+    var timer = setTimeout(function () { if (ctrl) ctrl.abort(); }, 25000);
+
+    fetch(CONFIG.endpoint, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(dados),
+      signal: ctrl ? ctrl.signal : undefined
+    })
+      .then(function (r) { return r.json(); })
+      .then(function (res) {
+        if (!res || res.ok !== true) {
+          if (res && res.erros) {
+            if (res.erros.nome) erroCampo(nome, res.erros.nome);
+            if (res.erros.email) erroCampo(email, res.erros.email);
+          }
+          mostrarAlerta(MENSAGENS[res && res.codigo] || MENSAGENS.padrao);
+          return;
+        }
+        sucesso(res);
+      })
+      .catch(function () { mostrarAlerta(MENSAGENS.padrao); })
+      .finally(function () {
+        clearTimeout(timer);
+        enviando = false;
+        botao.disabled = false;
+        botao.textContent = "Receber meu Raio-X gratuito";
+      });
+  });
+
+  function sucesso(res) {
+    var ok = document.getElementById("f-ok");
+    var titulo = document.getElementById("ok-titulo");
+    var texto = document.getElementById("ok-texto");
+    var link = document.getElementById("ok-link");
+    var primeiro = String(res.nome || "").split(" ")[0];
+
+    titulo.textContent = (res.novo ? "Pronto, " : "Que bom te ver de novo, ") + primeiro + ".";
+    if (res.email === "enviado") texto.textContent = "Seu cadastro foi registrado e enviamos o link para o seu e-mail.";
+    else if (res.email === "ja_enviado") texto.textContent = "Você já tinha cadastro. O link enviado ao seu e-mail continua válido.";
+    else texto.textContent = "Seu cadastro foi registrado. O e-mail pode levar alguns minutos; o acesso abaixo já funciona.";
+
+    link.href = res.linkKit;
+    if (!res.kitLiberado) {
+      link.textContent = "Ver status do material";
+      document.getElementById("ok-mini").textContent = "O kit está em revisão final. Você receberá o acesso por e-mail quando for liberado.";
+    }
+    form.hidden = true;
+    ok.hidden = false;
+    ok.focus();
+  }
+})();
+</script>
+</body>
+</html>
